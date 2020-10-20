@@ -37,11 +37,11 @@ def load_trained_model(pretrained_path):
 
 
 def main():
-    image = './demo/test.jpg'
+    image = './dataset/demo/demo_image.png'
     im = Image.open(image).convert('RGB')
     im = transform(im)
     im = im.to(device)
-    model = load_trained_model('/weights/')
+    model = load_trained_model('./weights/rap/inception_iccv/21.pth')
     model = model.to(device)
     # print(model)
     out = model(im)
