@@ -38,12 +38,14 @@ def load_trained_model(pretrained_path):
 
 def main():
     image = './demo/test.jpg'
-    im = Image.open(image).covert('RGB')
+    im = Image.open(image).convert('RGB')
     im = transform(im)
     im = im.to(device)
     model = load_trained_model('/weights/')
     model = model.to(device)
-    print(model)
+    # print(model)
+    out = model(im)
+    print(out)
 
 
 if __name__ == '__main__':
