@@ -1,0 +1,6 @@
+dataset/
+/dataset/pa100k/
+/dataset/
+/dataset/rap/
+*.pth
+*.tars

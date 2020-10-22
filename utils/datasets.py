@@ -7,15 +7,19 @@ import torch.utils.data as data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 
+
 def default_loader(path):
     return Image.open(path).convert('RGB')
+
+
 class MultiLabelDataset(data.Dataset):
-    def __init__(self, root, label, transform = None, loader = default_loader):
+    def __init__(self, root, label, transform=None, loader=default_loader):
         images = []
         labels = open(label).readlines()
         for line in labels:
             items = line.split()
             img_name = items.pop(0)
+            items = items[0].split(',')[:-1]
             if os.path.isfile(os.path.join(root, img_name)):
                 cur_label = tuple([int(v) for v in items])
                 images.append((img_name, cur_label))
@@ -45,125 +49,122 @@ attr_nums['peta'] = 35
 
 description = {}
 description['pa100k'] = ['Female',
-                        'AgeOver60',
-                        'Age18-60',
-                        'AgeLess18',
-                        'Front',
-                        'Side',
-                        'Back',
-                        'Hat',
-                        'Glasses',
-                        'HandBag',
-                        'ShoulderBag',
-                        'Backpack',
-                        'HoldObjectsInFront',
-                        'ShortSleeve',
-                        'LongSleeve',
-                        'UpperStride',
-                        'UpperLogo',
-                        'UpperPlaid',
-                        'UpperSplice',
-                        'LowerStripe',
-                        'LowerPattern',
-                        'LongCoat',
-                        'Trousers',
-                        'Shorts',
-                        'Skirt&Dress',
-                        'boots']
+                         'AgeOver60',
+                         'Age18-60',
+                         'AgeLess18',
+                         'Front',
+                         'Side',
+                         'Back',
+                         'Hat',
+                         'Glasses',
+                         'HandBag',
+                         'ShoulderBag',
+                         'Backpack',
+                         'HoldObjectsInFront',
+                         'ShortSleeve',
+                         'LongSleeve',
+                         'UpperStride',
+                         'UpperLogo',
+                         'UpperPlaid',
+                         'UpperSplice',
+                         'LowerStripe',
+                         'LowerPattern',
+                         'LongCoat',
+                         'Trousers',
+                         'Shorts',
+                         'Skirt&Dress',
+                         'boots']
 
 description['peta'] = ['Age16-30',
-                        'Age31-45',
-                        'Age46-60',
-                        'AgeAbove61',
-                        'Backpack',
-                        'CarryingOther',
-                        'Casual lower',
-                        'Casual upper',
-                        'Formal lower',
-                        'Formal upper',
-                        'Hat',
-                        'Jacket',
-                        'Jeans',
-                        'Leather Shoes',
-                        'Logo',
-                        'Long hair',
-                        'Male',
-                        'Messenger Bag',
-                        'Muffler',
-                        'No accessory',
-                        'No carrying',
-                        'Plaid',
-                        'PlasticBags',
-                        'Sandals',
-                        'Shoes',
-                        'Shorts',
-                        'Short Sleeve',
-                        'Skirt',
-                        'Sneaker',
-                        'Stripes',
-                        'Sunglasses',
-                        'Trousers',
-                        'Tshirt',
-                        'UpperOther',
-                        'V-Neck']
+                       'Age31-45',
+                       'Age46-60',
+                       'AgeAbove61',
+                       'Backpack',
+                       'CarryingOther',
+                       'Casual lower',
+                       'Casual upper',
+                       'Formal lower',
+                       'Formal upper',
+                       'Hat',
+                       'Jacket',
+                       'Jeans',
+                       'Leather Shoes',
+                       'Logo',
+                       'Long hair',
+                       'Male',
+                       'Messenger Bag',
+                       'Muffler',
+                       'No accessory',
+                       'No carrying',
+                       'Plaid',
+                       'PlasticBags',
+                       'Sandals',
+                       'Shoes',
+                       'Shorts',
+                       'Short Sleeve',
+                       'Skirt',
+                       'Sneaker',
+                       'Stripes',
+                       'Sunglasses',
+                       'Trousers',
+                       'Tshirt',
+                       'UpperOther',
+                       'V-Neck']
 
 description['rap'] = ['Female',
-                        'AgeLess16',
-                        'Age17-30',
-                        'Age31-45',
-                        'BodyFat',
-                        'BodyNormal',
-                        'BodyThin',
-                        'Customer',
-                        'Clerk',
-                        'BaldHead',
-                        'LongHair',
-                        'BlackHair',
-                        'Hat',
-                        'Glasses',
-                        'Muffler',
-                        'Shirt',
-                        'Sweater',
-                        'Vest',
-                        'TShirt',
-                        'Cotton',
-                        'Jacket',
-                        'Suit-Up',
-                        'Tight',
-                        'ShortSleeve',
-                        'LongTrousers',
-                        'Skirt',
-                        'ShortSkirt',
-                        'Dress',
-                        'Jeans',
-                        'TightTrousers',
-                        'LeatherShoes',
-                        'SportShoes',
-                        'Boots',
-                        'ClothShoes',
-                        'CasualShoes',
-                        'Backpack',
-                        'SSBag',
-                        'HandBag',
-                        'Box',
-                        'PlasticBag',
-                        'PaperBag',
-                        'HandTrunk',
-                        'OtherAttchment',
-                        'Calling',
-                        'Talking',
-                        'Gathering',
-                        'Holding',
-                        'Pusing',
-                        'Pulling',
-                        'CarryingbyArm',
-                        'CarryingbyHand']
-
-
+                      'AgeLess16',
+                      'Age17-30',
+                      'Age31-45',
+                      'BodyFat',
+                      'BodyNormal',
+                      'BodyThin',
+                      'Customer',
+                      'Clerk',
+                      'BaldHead',
+                      'LongHair',
+                      'BlackHair',
+                      'Hat',
+                      'Glasses',
+                      'Muffler',
+                      'Shirt',
+                      'Sweater',
+                      'Vest',
+                      'TShirt',
+                      'Cotton',
+                      'Jacket',
+                      'Suit-Up',
+                      'Tight',
+                      'ShortSleeve',
+                      'LongTrousers',
+                      'Skirt',
+                      'ShortSkirt',
+                      'Dress',
+                      'Jeans',
+                      'TightTrousers',
+                      'LeatherShoes',
+                      'SportShoes',
+                      'Boots',
+                      'ClothShoes',
+                      'CasualShoes',
+                      'Backpack',
+                      'SSBag',
+                      'HandBag',
+                      'Box',
+                      'PlasticBag',
+                      'PaperBag',
+                      'HandTrunk',
+                      'OtherAttchment',
+                      'Calling',
+                      'Talking',
+                      'Gathering',
+                      'Holding',
+                      'Pusing',
+                      'Pulling',
+                      'CarryingbyArm',
+                      'CarryingbyHand']
 
 
 def Get_Dataset(experiment, approach):
-
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     transform_train = transforms.Compose([
         transforms.Resize(size=(256, 128)),
@@ -172,28 +173,28 @@ def Get_Dataset(experiment, approach):
         # transforms.RandomRotation(20, resample=Image.BILINEAR),
         transforms.ToTensor(),
         normalize
-        ])
+    ])
     transform_test = transforms.Compose([
         transforms.Resize(size=(256, 128)),
         transforms.ToTensor(),
         normalize
-        ])
+    ])
 
     if experiment == 'pa100k':
         train_dataset = MultiLabelDataset(root='data_path',
-                    label='train_list_path', transform=transform_train)
+                                          label='train_list_path', transform=transform_train)
         val_dataset = MultiLabelDataset(root='data_path',
-                    label='val_list_path', transform=transform_test)
+                                        label='val_list_path', transform=transform_test)
         return train_dataset, val_dataset, attr_nums['pa100k'], description['pa100k']
     elif experiment == 'rap':
-        train_dataset = MultiLabelDataset(root='data_path',
-                    label='train_list_path', transform=transform_train)
-        val_dataset = MultiLabelDataset(root='data_path',
-                    label='val_list_path', transform=transform_test)
+        train_dataset = MultiLabelDataset(root='./dataset/rap',
+                                          label='./dataset/rap/RAP_train_list.txt', transform=transform_train)
+        val_dataset = MultiLabelDataset(root='./dataset/rap',
+                                        label='./dataset/rap/RAP_val_list.txt', transform=transform_test)
         return train_dataset, val_dataset, attr_nums['rap'], description['rap']
     elif experiment == 'peta':
         train_dataset = MultiLabelDataset(root='data_path',
-                    label='train_list_path', transform=transform_train)
+                                          label='train_list_path', transform=transform_train)
         val_dataset = MultiLabelDataset(root='data_path',
-                    label='val_list_path', transform=transform_test)
+                                        label='val_list_path', transform=transform_test)
         return train_dataset, val_dataset, attr_nums['peta'], description['peta']

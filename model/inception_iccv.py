@@ -12,6 +12,7 @@ def inception_iccv(pretrained=True, debug=False, **kwargs):
     """
     if pretrained:
         pretrained_dict = torch.load('model/bn_inception-52deb4733.pth')
+        # pretrained_dict = torch.load('./weights/rap/inception_iccv/21.pth')
         model_dict = model.state_dict()
         new_dict = {}
         for k,_ in model_dict.items():
@@ -19,7 +20,9 @@ def inception_iccv(pretrained=True, debug=False, **kwargs):
             if raw_name in pretrained_dict:
                 new_dict[k] = pretrained_dict[raw_name]
         model_dict.update(new_dict)
+
         model.load_state_dict(model_dict)
+    print("model load finshed!")
     return model
 
 
