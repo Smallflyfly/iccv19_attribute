@@ -4,6 +4,8 @@
 @author:fangpf
 @time: 2020/10/19
 """
+import time
+
 import cv2
 import torch
 from PIL import Image
@@ -27,6 +29,12 @@ classes = ['Female', 'AgeLess16', 'Age17-30', 'Age31-45', 'BodyFat', 'BodyNormal
            'Jeans', 'TightTrousers', 'LeatherShoes', 'SportShoes', 'Boots', 'ClothShoes', 'CasualShoes', 'Backpack',
            'SSBag', 'HandBag', 'Box', 'PlasticBag', 'PaperBag', 'HandTrunk', 'OtherAttchment', 'Calling', 'Talking',
            'Gathering', 'Holding', 'Pusing', 'Pulling', 'CarryingbyArm', 'CarryingbyHand']
+classes_name = [
+    '女性', '16岁以下', '17-30岁', '31-45岁', '体型胖', '体型正常', '体型瘦', '顾客', '职员', '秃头', '长发', '黑发', '带帽', '戴眼镜',
+    '围巾', '衬衫', '毛衣', '背心', 'T恤衫', '棉衣', '夹克衫', '西装', '紧身衣', '短袖', '长裤', '裙子', '短裙', '连衣裙', '牛仔裤',
+    '紧身裤', '皮鞋', '运动鞋', '靴子', '布鞋', '休闲鞋', '背包', 'SSBag', '手提包', '箱', '塑料袋', '纸袋', '行李箱', '其他东西',
+    '打电话', '聊天', '聚会', '保持', '推', '拉', '胳膊扛', '手搬运'
+]
 
 
 def check_keys(model, pretrained_state_dict):
@@ -74,15 +82,23 @@ def load_trained_model(pretrained_path):
 
 
 def main():
-    image = './dataset/demo/demo_image.png'
+
+    image = './dataset/demo/CAM08_2014-02-25_20140225153024-20140225154156_tarid1233_frame8021_line1.png'
     im = Image.open(image).convert('RGB')
     im = transform(im)
     im = im.to(device)
     model = load_trained_model('./weights/rap/inception_iccv/40.pth')
     model = model.to(device)
+    model.eval()
     # print(model)
     im = im.unsqueeze(0)
-    output = model(im)
+    total_time = 0
+    for i in range(100):
+        tic = time.time()
+        output = model(im)
+        print(time.time() - tic)
+        total_time += time.time() - tic
+    print('average time: ', total_time / 100)
     output = torch.max(torch.max(torch.max(output[0], output[1]), output[2]), output[3])
     output = torch.sigmoid(output).cpu().detach().numpy()
     output = np.where(output > 0.7, 1, 0)
@@ -92,11 +108,12 @@ def main():
     # print(output.shape)
     # print(output)
     target = np.array(
-        [1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-         0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1]).astype(np.long)
-    target = np.array(
-        [0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).astype(np.long)
+        [0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).astype(np.long)
+    # target = np.array(
+    #     [0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    #      1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).astype(np.long)
+
     target = torch.from_numpy(target).long()
     correct = pred.eq(target)
     correct = correct.numpy()
@@ -104,15 +121,16 @@ def main():
     attr_num = 51
     batch_size = 1
 
-    res = []
-    for k in range(attr_num):
-        res.append(1.0 * sum(correct[:, k]) / batch_size)
+    # res = []
+    # for k in range(attr_num):
+    #     res.append(1.0 * sum(correct[:, k]) / batch_size)
 
-    print(sum(res) / attr_num)
+    # print(sum(res) / attr_num)
 
     for i in range(51):
         if out_list[i] == 1:
-            print(classes[i])
+            print(classes_name[i])
+
 
 
 if __name__ == '__main__':

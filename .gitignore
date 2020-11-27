@@ -4,3 +4,7 @@ dataset/
 /dataset/rap/
 *.pth
 *.tars
+/images/
+*.png
+*.jpg
+*.JPEG

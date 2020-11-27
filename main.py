@@ -11,6 +11,7 @@ import torch.nn.parallel
 import torch.backends.cudnn as cudnn
 import torch.optim
 import model as models
+from demo import load_trained_model
 
 from utils.datasets import Get_Dataset
 
@@ -65,10 +66,11 @@ def main():
 
     val_loader = torch.utils.data.DataLoader(
         val_dataset,
-        batch_size=8, shuffle=False, num_workers=4, pin_memory=True)
+        batch_size=2, shuffle=False, num_workers=4, pin_memory=True)
 
     # create model
-    model = models.__dict__[args.approach](pretrained=True, num_classes=attr_num)
+    # model = models.__dict__[args.approach](pretrained=True, num_classes=attr_num)
+    model = load_trained_model('./weights/rap/inception_iccv/21.pth')
 
     # get the number of model parameters
     print('Number of model parameters: {}'.format(
