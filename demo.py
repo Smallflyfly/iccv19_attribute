@@ -9,6 +9,7 @@ import time
 import cv2
 import torch
 from PIL import Image
+from torch2trt import torch2trt
 from torchvision.transforms import transforms
 import numpy as np
 
@@ -82,7 +83,6 @@ def load_trained_model(pretrained_path):
 
 
 def main():
-
     image = './dataset/demo/CAM08_2014-02-25_20140225153024-20140225154156_tarid1233_frame8021_line1.png'
     im = Image.open(image).convert('RGB')
     im = transform(im)
@@ -90,12 +90,15 @@ def main():
     model = load_trained_model('./weights/rap/inception_iccv/40.pth')
     model = model.to(device)
     model.eval()
+    trt_x = torch.ones((1, 3, 256, 128)).cuda()
+    model_trt = torch2trt(model, [trt_x])
     # print(model)
     im = im.unsqueeze(0)
     total_time = 0
     for i in range(100):
         tic = time.time()
-        output = model(im)
+        # output = model(im)
+        output = model_trt(im)
         print(time.time() - tic)
         total_time += time.time() - tic
     print('average time: ', total_time / 100)
@@ -130,7 +133,6 @@ def main():
     for i in range(51):
         if out_list[i] == 1:
             print(classes_name[i])
-
 
 
 if __name__ == '__main__':
